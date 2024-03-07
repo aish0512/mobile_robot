@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="use_sim_time" default="true"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+    
+    <!-- Convert xacro file to URDF -->
+    <param name="robot_description" command="$(find xacro)/xacro '$(find mobile_nav)src/urdf/robot.urdf.xacro'" />
+
+    <!-- Spawn robot into Gazebo -->
+    <node name="gazebo_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -param robot_description -model mobile_nav" />
+    
+
+</launch>

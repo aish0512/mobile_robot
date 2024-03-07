@@ -1,0 +1,16 @@
+<launch>
+  <param name="robot_description" command="$(find xacro)/xacro '$(find mobile_nav)src/urdf/robot.urdf.xacro'" />
+  <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+  <node name="gazebo_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+          args="-urdf -param robot_description -model mobile_nav" />
+  <node name="rviz_gui" pkg="rviz" type="rviz" output="screen"/>
+    
+  <node name="RSP" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+    
+  <node name="JSP" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" output="screen"/>
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
+    <param name="base_frame" value="base_link"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="delta" value="0.1"/>
+  </node>
+</launch>

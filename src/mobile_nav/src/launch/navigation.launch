@@ -1,18 +1,16 @@
 <?xml version="1.0"?>
 <launch>
 
-     <arg name="use_sim_time" default="true"/>
-    <arg name="use_ros2_control" default="true"/>
-
     <!-- Process the URDF file using xacro and pass parameters -->
     <param name="robot_description"
-            command="$(find xacro)/xacro '$(find mobile_nav)/src/urdf/robot.urdf.xacro' use_ros2_control:=$(arg use_ros2_control) sim_mode:=$(arg use_sim_time)"/>
+            command="$(find xacro)/xacro '$(find mobile_nav)/src/urdf/robot.urdf.xacro'"/>
 
-    <!-- Launch the robot_state_publisher -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" output="screen">
-        <param name="use_sim_time" value="$(arg use_sim_time)"/>
-    </node>
-    <node name="Joint_tester" pkg="rviz" type="rviz" output="screen" args="-d $(find mobile_nav)/src/config/map.rviz"/>
+    <include file="$(find gazebo_ros)/launch/empty_world.launch"/>
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"  args="-param robot_description -urdf -model explorer_bot" />
+
+    <node name="Rsp" pkg="robot_state_publisher" type="robot_state_publisher" output="screen"/>
+    <node name="Joint_tester" pkg="rviz" type="rviz" output="screen" args="-d $(find mobile_nav)/src/config/map2.rviz"/>
 
 
      <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping">
